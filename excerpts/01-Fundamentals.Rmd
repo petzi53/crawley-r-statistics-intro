@@ -1,0 +1,309 @@
+---
+title: "01 Fundamental"
+author: "Peter Baumgartner"
+date: "`r Sys.Date()`"
+output: 
+  html_notebook: 
+    pandoc_args: [ 
+      "--number-offset=1,0" 
+    ]
+    fig_caption: true
+    number_sections: yes
+    toc: yes
+    toc_depth: 3
+---
+```{r label = "global-options", echo=FALSE, highlight=TRUE}
+knitr::opts_chunk$set(
+        message = F,
+        error = F,
+        warning = F,
+        comment = NA,
+        highlight = T,
+        prompt = T
+        )
+
+### install and load some important packages
+if (!require("tidyverse"))
+        {install.packages("tidyverse", repos = 'http://cran.wu.ac.at/')
+        library(tidyverse)}
+```
+
+Chapter 1 of: _Verzani, J. (2014). Using R for introductory statistics_
+
+
+## Introduction
+
+The **response variable** is the thing you are working on: it is the variable whose variation you are attempting to understand. This is the variable that goes on the y axis of the graph (the ordinate). The **explanatory variable** goes on the x axis of the graph (the abscissa); you are interested in the extent to which variation in the response variable is associated with variation in the explanatory variable.
+
+Choose type of explanatory variable    | Appropriate statistical method
+-------------------------------------- | ------------------------------
+All explanatory variables continuous   | Regression
+All explanatory variables categorical  | Analysis of variance (ANOVA)
+Some explanatory variables continuous some categorical | Analysis of covariance (ANCOVA)
+
+Choose type pf response variable       | Appropriate statistical method
+-------------------------------------- | ------------------------------
+Continuous                             | Regression, ANOVA or ANCOVA
+Proportion                             | Logistic regression
+Count                                  | Log linear models
+Binary                                 | Binary logistic analysis
+Time at death                          | Survival analysis
+
+## Essential Notions
+
+### Everything Varies
+
+Because everything varies, finding that things vary is simply not interesting. We need a way of discriminating between variation that is scientifically interesting, and variation that just reflects background heterogeneity.
+
+### Significance
+
+What do we mean when we say that a result is significant? … We mean that ‘a result was unlikely to have occurred by chance’. In particular, we mean ‘unlikely to have occurred by chance if the null hypothesis was true’. … Statisticians have an agreed convention about what constitutes ‘unlikely’. They say that an event is unlikely if it occurs less than 5% of the time. In general, the null hypothesis says that ‘nothing is happening’ and the alternative says that ‘something is happening’.
+
+### Good and Bad Hypotheses
+
+Popper argued "that a good hypothesis is a falsifiable hypothesis." 
+
+A. there are vultures in the local park (not good)
+B. there are no vultures in the local park (good)
+
+To falsify A you have to say that you have not seen vultures. But it could be that they have hidden or you haver over looked them. 
+
+> The absence of evidence is not evidence of absence.
+
+### p Values
+
+The p value is not the probability that thenull hypothesis is true… In fact, p values are
+calculated on the assumption that the null hypothesis is true. … p values are about the size of the test statistic. In particular, a p value is an estimate of the probability that a value of the test statistic, or a value more extreme than this, could have occurred by chance when the null hypothesis is true. Big values of the test statistic indicate that the null hypothesis is unlikely to be true. For sufficiently large values of the test statistic, we reject the null hypothesis and accept the alternative hypothesis.
+
+Note also that saying ‘we do not reject the null hypothesis’ and ‘the null hypothesis istrue’ are two quite different things. For instance, we may have failed to reject a false null hypothesis because our sample size was too low, or because our measurement error was too large. Thus, p values are interesting, but they do not tell the whole story: effect sizes and sample sizes are equally important in drawing conclusions. The modern practice is to state the p value rather than just to say ‘we reject the null hypothesis’. That way, the reader canform their own judgement about the effect size and its associated uncertainty.
+
+### Type I and Type II Error
+
+* we can reject the null hypothesis when it is true  (Type I)
+* we can accept the null hypothesis when it is false (Type II)
+
+## Model Choice
+
+### Key assumptions
+
+All models are wrong, but some models are better than others. Model choice is one of the most frequently ignored of the big issuesinvolved in learning statistics.
+
+In order of importance, these are
+
+* random sampling
+* constant variance
+* normal errors
+* independent errors
+* additive effects
+
+The issues are at their simplest with designed manipulative experiments in which there was thorough randomization and good levels of replication. The issues are most difficult with observational studies where there are large numbers of (possibly correlated) explanatory variables, little or no randomization and small numbers of data points. Much of yourdata is likely to come from the second category.
+
+### Statistical Modelling
+
+The object is to determine the values of the parameters in a specific model that lead to the best fit of the model to the data. The data are sacrosanct, and they tell us what actually happened under a given set of circumstances.
+
+The model is fitted to data, not the other way around. The best model is the model that produces the least unexplained variation (the minimal residual deviance), subject to the constraint that the parameters in the model should all be statistically significant.
+
+It is very important to understand that there is not one model; this is one of the common implicit errors involved in traditional regression and ANOVA,where the same models are used, often uncritically, over and over again. In mostcircumstances, there will be a large number of different, more or less plausible models that might be fitted to any given set of data.
+
+### Maximum Likelihood
+
+This is how it works:
+
+* given the data
+* and given our choice of model
+* what values of the parameters of that model
+* make the observed data most likely?
+
+We judge the model on the basis how likely the data would be if the model were correct.
+
+## Experimental Design
+
+### Key concepts
+
+There are only two key concepts:
+
+* replication (You replicate to increase reliability.)
+* randomization (You randomize to reduce bias.)
+
+There are a number of other issues whose mastery will increase the likelihood that you analyse your data the right way rather than the wrong way:
+
+* the principle of parsimony
+* the power of a statistical test
+* controls
+* spotting pseudoreplication and knowing what to do about it
+* the difference between experimental and observational data (non-orthogonality)
+
+### The Principle of Parsimony (Occam’s Razor)
+
+Given a set of equally good explanations for a given phenomenon, then the correct explanation is the simplest explanation.
+
+In statistical modelling, the principle of parsimony means that:
+
+* models should have as few parameters as possible
+* linear models should be preferred to non-linear models
+* experiments relying on few assumptions should be preferred to those relying on many
+* models should be pared down until they are minimal adequate
+* simple explanations should be preferred to complex explanations
+
+> In general, a variable is retained in the model only if it causes a significant increase in deviance when it is removed from the current model.
+
+Einstein made a characteristically subtle modification to Occam’s razor. He said: ‘A model should be as simple as possible. But no simpler.’
+
+**Observation, Theory and Experiment and Controls**
+
+No controls, no conclusions.
+
+### Replication: It’s the ns that Justify the Means
+
+The object of replication is to increase the reliability of parameter estimates, and to allow us to quantify the variability that is found within the same treatment.
+
+To qualify as replicates, the repeated measurements:
+
+* must be independent
+* must not form part of a time series (data collected from the same place on successive occasions are not independent)
+* must not be grouped together in one place (aggregating the replicates means that they arenot spatially independent)
+* must be measured at an appropriate spatial scale
+* ideally, one replicate from each treatment ought to be grouped together into a block, andall treatments repeated in many different blocks.
+* repeated measures (e.g. from the same individual or the same spatial location) are not replicates (this is probably the commonest cause of pseudoreplication in statisticalwork)
+
+### How Many Replicates?
+
+The usual answer is ‘as many as you can afford’. An alternative answer is 30. A very useful rule of thumb is this: a sample of 30 or more is a big sample, but a sample of less than 30 is a small sample. 
+
+### Power
+
+The power of a test is the probability of rejecting the null hypothesis when it is false. It has to do with Type II errors: β is the probability of accepting the null hypothesis when it is false.
+
+> Most statisticians work with α = 0:05 and β = 0:2.
+
+Now the power of a test is defined as 1 - β = 0:8 under the standard assumptions. This is used to calculate the sample sizes necessary to detect a specified difference when the error variance is known (or can be guessed at).
+
+The larger the variance s^2^, and the smaller the size of the difference, the bigger the sample we shall need. 
+
+$$n = 16s^{2} / d^{2}$$
+We simply need to work out 16 times the sample variance (obtained from the literature or from a small pilot experiment) and divide by the square of the difference that we want to be able to detect. 
+
+So suppose that our current cereal yield is 10 t/ha with a standard deviation of sd = 2.8 t/ha (giving s^2^= 7.84) and we want to be able to say that a yield increase (delta) of 2 t/ha is significant at 95% with power = 80%, then we shall need to have 16×7.84/4 = 31.36 replicates in each treatment. The built in R function
+
+> power.t.test(delta = 2, sd = 2.8, power = 0.8)
+
+also gives n = 32 replicates per treatment on rounding-up.
+
+```{r power-example}
+power.t.test(delta = 2, sd = 2.8, power = 0.8)
+```
+
+### Randomization
+
+Randomization is something that everybody says they do, but hardly anybody doesproperly. … If we select really randomly, then the objects in the sample would have exactly the same chance of being selected as every other object in the population. 
+
+### Strong Inference
+
+There are two essential steps to the protocol of strong inference:
+
+* formulate a clear hypothesis
+* devise an acceptable test
+
+A great many scientific experiments appear to be carried out with no particular hypothesis in mind at all, but simply to see what happens. While this approach maybe commendable in the early stages of a study, such experiments tend to be weak as an end in themselves, because there will be such a large number of equally plausible explanations for the results. 
+
+> Without contemplation there will be no testable predictions; without testable predictions there will be no experimental ingenuity; without experimental ingenuity there is likely to be inadequate control; in short, equivocal interpretation. 
+
+### Weak Interference
+
+The phrase ‘weak inference’ is used (often disparagingly) to describe the interpretation ofobservational studies and the analysis of so-called ‘natural experiments’. It is silly to be disparaging about these data, because they are often the only data that we have. 
+
+Natural experiments arise when an event … occurs that is like an experimental treatment (a hurricane blows down half of a forest block; a landslide createsa bare substrate; a stock market crash produces lots of suddenly poor people, etc.).
+
+It is impossible to be certain of the conditions that existed before such an “experiment” began. It then becomes necessary to make assumptions about these conditions, and any conclusions reached on the basis of natural experiments are thereby weakened to the point of being hypotheses, and they should be stated as such’.
+
+### How Long to Go On?
+
+Ideally, the duration of an experiment should be determined in advance, lest one falls prey toone of the twin temptations:
+
+* to stop the experiment as soon as a pleasing result is obtained
+* to keep going with the experiment until the ‘right’ result is achieved (the ‘Gregor Mendel effect’)
+
+In practice, most experiments probably run for too short a period, because of the idiosyncrasies of scientific funding. This short-term work is particularly dangerous in medicine and the environmental sciences, because the kind of short-term dynamics exhibited after pulse experiments may be entirely different from the long-term dynamics of the same system.
+
+### Pseudoreplication
+
+Pseudoreplication occurs when you analyse the data as if you had more degrees of freedom than you really have. There are two kinds of pseudoreplication:
+
+* temporal pseudoreplication, involving repeated measurements from the same individual
+* spatial pseudoreplication, involving several measurements taken from the same vicinity
+
+Pseudoreplication is a problem because one of the most important assumptions of standard statistical analysis is **independence of errors**. Repeated measures through time on the same individual will have non-independent errors because peculiarities of the individual will be reflected in all of the measurements made on it (the repeated measures will be temporally correlated with one another). Samples taken from the same vicinity will have non-independent errors because peculiarities of the location will be common to all the samples (e.g. yields will all be high in a good patch and all be low in a bad patch).
+
+Pseudoreplication is generally quite easy to spot. The question to ask is this. How many degrees of freedom for error does the experiment really have? If a field experiment appears to have lots of degrees of freedom, it is probably pseudoreplicated. … The problem is that it leads to the reporting of masses of spuriously significant results (with thousands degrees of freedom for error, it is almost impossible not to have significant differences). 
+
+There are various things that you can do when your data are pseudoreplicated:
+
+* average away the pseudoreplication and carry out your statistical analysis on the means
+* carry out separate analyses for each time period
+* use more advanced statistical techniques such as time series analysis or mixed effects models
+
+### Initial Conditions
+
+Many otherwise excellent scientific experiments are spoiled by a lack of information about initial conditions. How can we know if something has changed if we do not know what itwas like to begin with? It is often implicitly assumed that all the experimental units were alike at the beginning of the experiment, but this needs to be demonstrated rather than takenon faith.  One of the most important uses of data on initial conditions is as a check on the efficiency of randomization.
+
+### Orthogonal Designs and Non-Orthogonal Observational Data
+
+In the case of planned experiments, allof the treatment combinations are equally represented and, barring accidents, there will beno missing values. Such experiments are said to be **orthogonal**. 
+
+In the case of observational studies, however, we have no control over the number of individuals for which we have data, or over the combinations of circumstances that are observed. Many of the explanatory variables are likely to be correlated with one another, as well as with the response variable. Missing treatment combinations will be commonplace, and such data are said to be **non-orthogonal**.
+
+This makes an important difference to our statistical modelling because, inorthogonal designs, the variability that is attributed to a given factor is constant, and does notdepend upon the order in which that factor is removed from the model. In contrast, with non-orthogonal data, we find that the variability attributable to a given factor does depend uponthe order in which the factor is removed from the model. 
+
+> Remember, for non-orthogonal data, order matters.
+
+### Aliasing
+
+This topic causes concern because it manifests itself as one or more rows of NA appearing unexpectedly in the output of your model. Aliasing occurs when there is no information on which to base an estimate of a parameter value. **Intrinsic aliasing** occurs when it is due to the structure of the model. **Extrinsic aliasing** occurs when it is due to the nature of the data. 
+
+Parameters can be aliased for one of two reasons:
+
+* there are no data in the dataframe from which to estimate the parameter (e.g. missing values, partial designs or correlation amongst the explanatory variables)
+* the model is structured in such a way that the parameter value cannot be estimated (e.g.over-specified models with more parameters than necessary)
+
+In a multiple regression analysis, if one of the continuous explanatory variables is perfectly correlated with another variable that has already been fitted to the data (perhaps because it is aconstant multiple of the first variable), then the second term is aliased and adds nothing to the descriptive power of the model. 
+
+If all of the values of a particular explanatory variable are set to zero for a given level of aparticular factor, then that level is said to have been **intentionally aliased**. This sort ofaliasing is a useful programming trick during model simplification in ANCOVA when wewish a covariate to be fitted to some levels of a factor but not to others.
+
+### Multiple Comparisons
+
+The thorny issue of multiple comparisons arises because when we do more than one test weare likely to find ‘false positives’ at an inflated rate (i.e. by rejecting a true null hypothesismore often than indicated by the value of α).
+
+The modern approach is to use contrasts wherever possible, and where it is essential to do multiple comparisons, then to use the wonderfully named Tukey’s honestly significant differences (see _?TukeyHSD_).
+
+## Summary of Statistical Models in R
+
+Models are fitted to data (not the other way round), using one of the following model-fittingfunctions:
+
+* lm: fits a linear model assuming normal errors and constant variance; generally this isused for regression analysis using continuous explanatory variables. The default outputis summary.lm
+* aov: an alternative to lm with summary.aov as the default output. Typically used onlywhen there are complex error terms to be estimated (e.g. in split-plot designs wheredifferent treatments are applied to plots of different sizes)
+* glm: fits generalized linear models to data using categorical or continuous explanatoryvariables, by specifying one of a family of error structures (e.g. Poisson for count dataor binomial for proportion data) and a particular link function
+* gam: fits generalized additive models to data with one of a family of error structures (e.g.Poisson for count data or binomial for proportion data) in which the continuousexplanatory variables can (optionally) be fitted as arbitrary smoothed functions usingnon-parametric smoothers rather than specific parametric functions.
+* lmer: fits linear mixed effects models with specified mixtures of fixed effects andrandom effects and allows for the specification of correlation structure amongst theexplanatory variables and autocorrelation of the response variable (e.g. time serieseffects with repeated measures). The older lme is an alternative
+* nls: fits a non-linear regression model via least squares, estimating the parameters of aspecified non-linear function
+* nlme: fits a specified non-linear function in a mixed effects model where theparameters of the non-linear function are assumed to be random effects; allowsfor the specification of correlation structure amongst the explanatory variables andautocorrelation of the response variable (e.g. time series effects with repeatedmeasures).
+* loess: fits a local regression model with one or more continuous explanatory variablesusing non-parametric techniques to produce a smoothed model surface
+* rpart: fits a regression tree model using binary recursive partitioning whereby the dataare successively split along coordinate axes of the explanatory variables so that at anynode, the split is chosen that maximally distinguishes the response variable in the leftand the right branches. With a categorical response variable, the tree is called aclassification tree, and the model used for classification assumes that the responsevariable follows a multinomial distribution.
+
+For most of these models, a range of generic functions can be used to obtain informationabout the model. 
+
+HERE FOLLOWS TABLE from page 19!
+
+## Organizing work with R
+
+This part of the book is weak. Here I do have more experiences. I found the following strange recommendation:
+
+* Writing scripts as text files 
+* Using console and collecting the important command with the  _History(Inf)_ function
+* always using the whole directy path when calling data or script files
+* attaching dataframes with the danger of masked variables
+
+Obviously Crawley is not
+
+* using the possibilities of RStudio, 
+* setting the default directory
